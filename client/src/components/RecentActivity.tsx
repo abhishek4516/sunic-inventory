@@ -1,6 +1,14 @@
-import { recentActivities } from "../data/dashboard";
+import { useDashboard } from "../context/DashboardContext";
 
 function RecentActivity() {
+  const { dashboard, loading } = useDashboard();
+
+  if (loading || !dashboard) {
+    return (
+      <div className="h-[350px] animate-pulse rounded-2xl border border-border bg-card" />
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-border bg-card p-6 transition-colors duration-300">
       <h2 className="mb-6 text-lg font-bold tracking-tight text-foreground">
@@ -8,12 +16,12 @@ function RecentActivity() {
       </h2>
 
       <div className="relative">
-        {recentActivities.map((activity, index) => (
+        {dashboard.recentActivity.map((activity, index) => (
           <div
             key={activity.id}
             className="relative flex gap-4 pb-6 last:pb-0"
           >
-            {index !== recentActivities.length - 1 && (
+            {index !== dashboard.recentActivity.length - 1 && (
               <span className="absolute left-[5px] top-3 h-full w-px bg-border" />
             )}
 

@@ -25,11 +25,11 @@ export const addEmployee = async (
       });
     }
 
-    const existingEmployee = await Employee.findOne({
+    const exists = await Employee.findOne({
       employeeId,
     });
 
-    if (existingEmployee) {
+    if (exists) {
       return res.status(400).json({
         success: false,
         message: "Employee already exists",
@@ -45,7 +45,6 @@ export const addEmployee = async (
 
     return res.status(201).json({
       success: true,
-      message: "Employee added successfully",
       employee,
     });
   } catch {

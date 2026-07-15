@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronDown } from "lucide-react";
 import Drawer from "./Drawer";
-import { addItem, updateItem } from "../services/inventoryService";
+import {
+  addItem,
+  updateItem,
+} from "../services/inventoryService";
 
 interface Item {
   _id: string;
@@ -20,10 +23,17 @@ interface ItemDrawerProps {
   onSuccess: () => void;
 }
 
-function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
+function ItemDrawer({
+  open,
+  mode,
+  item,
+  onClose,
+  onSuccess,
+}: ItemDrawerProps) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState(0);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -41,8 +51,18 @@ function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
   }, [mode, item, open]);
 
   const handleSubmit = async () => {
-    if (!name || !category || quantity <= 0) {
-      toast.error("Please fill all fields");
+    if (!name.trim()) {
+      toast.error("Item name is required");
+      return;
+    }
+
+    if (!category) {
+      toast.error("Please select a category");
+      return;
+    }
+
+    if (quantity < 0) {
+      toast.error("Quantity cannot be negative");
       return;
     }
 
@@ -50,17 +70,30 @@ function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
       setLoading(true);
 
       if (mode === "add") {
-        await addItem({ name, category, quantity });
+        await addItem({
+          name,
+          category,
+          quantity,
+        });
+
         toast.success("Item added successfully");
       } else if (item) {
-        await updateItem(item._id, { name, category, quantity });
+        await updateItem(item._id, {
+          name,
+          category,
+          quantity,
+        });
+
         toast.success("Item updated successfully");
       }
 
       onClose();
       onSuccess();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
@@ -69,7 +102,11 @@ function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
   return (
     <Drawer
       open={open}
-      title={mode === "add" ? "Add Inventory Item" : "Edit Inventory Item"}
+      title={
+        mode === "add"
+          ? "Add Inventory Item"
+          : "Edit Inventory Item"
+      }
       onClose={onClose}
     >
       <div className="space-y-5">
@@ -81,6 +118,7 @@ function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder="Enter item name"
             className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -118,10 +156,20 @@ function ItemDrawer({ open, mode, item, onClose, onSuccess }: ItemDrawerProps) {
 
           <input
             type="number"
+            min={0}
             value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
+            onChange={(e) =>
+              setQuantity(
+                Math.max(
+                  0,
+                  Number(e.target.value)
+                )
+              )
+            }
             className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground outline-none transition-colors duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
+
+         
         </div>
 
         <div className="flex justify-end gap-3 pt-5">

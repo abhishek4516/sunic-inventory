@@ -7,8 +7,9 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
-import { inventoryChartData } from "../data/dashboard";
+
 import { useTheme } from "../context/ThemeContext";
+import { useDashboard } from "../context/DashboardContext";
 
 function CustomTooltip({
   active,
@@ -30,7 +31,7 @@ function CustomTooltip({
         {label?.toUpperCase()}
       </p>
 
-      <p className="mt-0.5 text-sm font-bold text-foreground">
+      <p className="mt-1 text-sm font-bold text-foreground">
         {payload[0].value} items
       </p>
     </div>
@@ -39,6 +40,8 @@ function CustomTooltip({
 
 function InventoryChart() {
   const { theme } = useTheme();
+
+  const { dashboard, loading } = useDashboard();
 
   const gridColor =
     theme === "dark"
@@ -49,6 +52,17 @@ function InventoryChart() {
     theme === "dark"
       ? "#94A3B8"
       : "#64748B";
+
+  if (loading || !dashboard) {
+    return (
+      <div className="h-[400px] animate-pulse rounded-2xl border border-border bg-card" />
+    );
+  }
+
+  const chartData = dashboard.categories.map((category) => ({
+    category: category.name,
+    items: category.value,
+  }));
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 transition-colors duration-300">
@@ -62,12 +76,9 @@ function InventoryChart() {
         </p>
       </div>
 
-      <ResponsiveContainer
-        width="100%"
-        height={320}
-      >
+      <ResponsiveContainer width="100%" height={320}>
         <BarChart
-          data={inventoryChartData}
+          data={chartData}
           barCategoryGap="30%"
         >
           <CartesianGrid
@@ -100,9 +111,7 @@ function InventoryChart() {
               fill: "#E5A44D",
               fillOpacity: 0.08,
             }}
-            content={
-              <CustomTooltip theme={theme} />
-            }
+            content={<CustomTooltip theme={theme} />}
           />
 
           <Bar

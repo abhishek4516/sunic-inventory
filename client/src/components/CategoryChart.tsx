@@ -5,8 +5,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { categoryChartData } from "../data/dashboard";
+
 import { useTheme } from "../context/ThemeContext";
+import { useDashboard } from "../context/DashboardContext";
 
 const COLORS = [
   "#E5A44D",
@@ -35,7 +36,7 @@ function CustomTooltip({
         {payload[0].name?.toUpperCase()}
       </p>
 
-      <p className="mt-0.5 text-sm font-bold text-foreground">
+      <p className="mt-1 text-sm font-bold text-foreground">
         {payload[0].value} items
       </p>
     </div>
@@ -44,9 +45,18 @@ function CustomTooltip({
 
 function CategoryChart() {
   const { theme } = useTheme();
+  const { dashboard, loading } = useDashboard();
 
-  const total = categoryChartData.reduce(
-    (sum: number, d: any) => sum + d.value,
+  if (loading || !dashboard) {
+    return (
+      <div className="h-[420px] animate-pulse rounded-2xl border border-border bg-card" />
+    );
+  }
+
+  const categoryData = dashboard.categories;
+
+  const total = categoryData.reduce(
+    (sum, item) => sum + item.value,
     0
   );
 
@@ -58,13 +68,10 @@ function CategoryChart() {
 
       <div className="flex flex-col items-center gap-8 md:flex-row">
         <div className="relative h-[260px] w-full max-w-[260px] shrink-0">
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={categoryChartData}
+                data={categoryData}
                 dataKey="value"
                 nameKey="name"
                 innerRadius={78}
@@ -72,24 +79,16 @@ function CategoryChart() {
                 paddingAngle={2}
                 stroke="none"
               >
-                {categoryChartData.map(
-                  (_: any, index: number) => (
-                    <Cell
-                      key={index}
-                      fill={
-                        COLORS[index % COLORS.length]
-                      }
-                    />
-                  )
-                )}
+                {categoryData.map((_, index) => (
+                  <Cell
+                    key={index}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
               </Pie>
 
               <Tooltip
-                content={
-                  <CustomTooltip
-                    theme={theme}
-                  />
-                }
+                content={<CustomTooltip theme={theme} />}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -106,35 +105,30 @@ function CategoryChart() {
         </div>
 
         <div className="w-full space-y-3">
-          {categoryChartData.map(
-            (item: any, index: number) => (
-              <div
-                key={item.name}
-                className="flex items-center justify-between"
-              >
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className="h-2.5 w-2.5 rounded-full"
-                    style={{
-                      backgroundColor:
-                        COLORS[
-                          index %
-                            COLORS.length
-                        ],
-                    }}
-                  />
+          {categoryData.map((item, index) => (
+            <div
+              key={item.name}
+              className="flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2.5">
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{
+                    backgroundColor:
+                      COLORS[index % COLORS.length],
+                  }}
+                />
 
-                  <span className="text-sm font-medium text-foreground">
-                    {item.name}
-                  </span>
-                </div>
-
-                <span className="font-mono text-sm font-bold text-foreground">
-                  {item.value}
+                <span className="text-sm font-medium text-foreground">
+                  {item.name}
                 </span>
               </div>
-            )
-          )}
+
+              <span className="font-mono text-sm font-bold text-foreground">
+                {item.value}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

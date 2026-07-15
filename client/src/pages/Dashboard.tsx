@@ -4,18 +4,22 @@ import StatsGrid from "../components/dashboard/StatsGrid";
 import ChartsSection from "../components/dashboard/ChartsSection";
 import BottomSection from "../components/dashboard/BottomSection";
 
+import { DashboardProvider } from "../context/DashboardContext";
+
 function Dashboard() {
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <DashboardHeader />
+      <DashboardProvider>
+        <div className="space-y-6">
+          <DashboardHeader />
 
-        <StatsGrid />
+          <StatsGrid />
 
-        <ChartsSection />
+          <ChartsSection />
 
-        <BottomSection />
-      </div>
+          <BottomSection />
+        </div>
+      </DashboardProvider>
     </AdminLayout>
   );
 }
