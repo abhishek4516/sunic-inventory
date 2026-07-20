@@ -1,6 +1,6 @@
+import { Types } from "mongoose";
 import Issue from "../models/issue";
 import Item from "../models/items";
-
 interface IssueItemData {
   itemId: string;
   employeeName: string;
@@ -36,14 +36,14 @@ export const issueItemService = async ({
 
   await item.save();
 
-  const issue = await Issue.create({
-    itemId,
-    employeeName,
-    quantity,
-    remarks,
-    issuedBy,
-    status: "Issued",
-  });
+ const issue = await Issue.create({
+  itemId: new Types.ObjectId(itemId),
+  employeeName,
+  quantity,
+  remarks,
+  issuedBy,
+  status: "Issued",
+});
 
   return issue;
 };

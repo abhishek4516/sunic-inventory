@@ -5,8 +5,10 @@ export interface IItem extends Document {
   category: string;
   quantity: number;
   availableQuantity: number;
-}
 
+  createdAt: Date;
+  updatedAt: Date;
+}
 const itemSchema = new Schema<IItem>(
   {
     name: {

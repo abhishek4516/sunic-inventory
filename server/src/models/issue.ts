@@ -1,7 +1,7 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 
 export interface IIssue extends Document {
-  itemId: Schema.Types.ObjectId;
+ itemId: Types.ObjectId;
   employeeName: string;
   quantity: number;
   remarks?: string;
