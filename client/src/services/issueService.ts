@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 export interface IssuePayload {
   itemId: string;
-  employeeId: string;
+  employeeName: string;
   quantity: number;
   remarks?: string;
+  issuedBy?: string;
 }
-
 export const issueItem = async (data: IssuePayload) => {
   const res = await axios.post(`${API}/issues`, data);
   return res.data;

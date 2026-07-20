@@ -1,10 +1,11 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
-  ReactNode,
+  useEffect,
 } from "react";
+
+import type { ReactNode } from "react";
 
 import { getDashboard } from "../services/dashboardService";
 import type { DashboardData } from "../services/dashboardService";
