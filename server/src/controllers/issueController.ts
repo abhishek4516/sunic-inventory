@@ -36,6 +36,8 @@ export const issueItem = async (
       message: `${quantity} unit(s) issued to ${employeeName}.`,
       type: "info",
       module: "issue",
+      actionUrl: "/issues",
+      icon: "issue",
     });
 
     return res.status(201).json({
