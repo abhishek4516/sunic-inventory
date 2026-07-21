@@ -53,6 +53,8 @@ export const addItem = async (
       message: `${item.name} (${item.quantity} units) added to inventory.`,
       type: "success",
       module: "inventory",
+      actionUrl: "/inventory",
+      icon: "inventory",
     });
 
     return res.status(201).json({
@@ -60,7 +62,9 @@ export const addItem = async (
       message: "Item added successfully",
       item,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -81,7 +85,9 @@ export const getItems = async (
       success: true,
       items,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -151,6 +157,8 @@ export const updateItem = async (
       message: `${item.name} was updated.`,
       type: "info",
       module: "inventory",
+      actionUrl: "/inventory",
+      icon: "inventory",
     });
 
     if (item.availableQuantity === 0) {
@@ -159,6 +167,8 @@ export const updateItem = async (
         message: `${item.name} is out of stock.`,
         type: "error",
         module: "inventory",
+        actionUrl: "/inventory",
+        icon: "warning",
       });
     } else if (item.availableQuantity <= 5) {
       await createNotification({
@@ -166,6 +176,8 @@ export const updateItem = async (
         message: `${item.name} has only ${item.availableQuantity} units remaining.`,
         type: "warning",
         module: "inventory",
+        actionUrl: "/inventory",
+        icon: "warning",
       });
     }
 
@@ -174,7 +186,9 @@ export const updateItem = async (
       message: "Item updated successfully",
       item,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -203,6 +217,8 @@ export const deleteItem = async (
       message: `${item.name} was removed from inventory.`,
       type: "error",
       module: "inventory",
+      actionUrl: "/inventory",
+      icon: "inventory",
     });
 
     await Item.findByIdAndDelete(id);
@@ -211,7 +227,9 @@ export const deleteItem = async (
       success: true,
       message: "Item deleted successfully",
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
