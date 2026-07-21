@@ -1,12 +1,11 @@
 import {
   createContext,
-  useCallback,
   useEffect,
-  useMemo,
   useState,
-  ReactNode,
+  useCallback,
+  useMemo,
+  type ReactNode,
 } from "react";
-
 import type {
   Notification,
 } from "../types/notification";
