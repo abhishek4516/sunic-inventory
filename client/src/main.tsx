@@ -6,22 +6,25 @@ import "./index.css";
 import App from "./App";
 import { SidebarProvider } from "./context/SidebarContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { NotificationProvider } from "./context/NotificationContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <SidebarProvider>
-          <App />
+  <BrowserRouter>
+  <ThemeProvider>
+    <SidebarProvider>
+      <NotificationProvider>
+        <App />
 
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 3000,
-            }}
-          />
-        </SidebarProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+          }}
+        />
+      </NotificationProvider>
+    </SidebarProvider>
+  </ThemeProvider>
+</BrowserRouter>
   </StrictMode>
 );

@@ -1,8 +1,8 @@
-import { Bell, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import NotificationBell from "./NotificationBell";
 
 function Navbar() {
-  const hasNotifications = true;
   const { theme, toggleTheme } = useTheme();
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -23,6 +23,7 @@ function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
@@ -35,19 +36,12 @@ function Navbar() {
           )}
         </button>
 
-        <button
-          aria-label="Notifications"
-          className="relative rounded-md p-2 text-muted-foreground transition hover:bg-accent hover:text-foreground"
-        >
-          <Bell size={19} strokeWidth={1.75} />
-
-          {hasNotifications && (
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-card bg-amber-500" />
-          )}
-        </button>
+        {/* Notification Bell */}
+        <NotificationBell />
 
         <div className="h-8 w-px bg-border" />
 
+        {/* User */}
         <div className="flex items-center gap-3">
           <div className="hidden text-right md:block">
             <p className="text-sm font-semibold leading-tight text-foreground">
