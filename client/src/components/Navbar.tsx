@@ -5,6 +5,11 @@ function Navbar() {
   const hasNotifications = true;
   const { theme, toggleTheme } = useTheme();
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const name = user.name || "Admin";
+  const email = user.email || "admin@sunic.com";
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card px-6 transition-colors duration-300">
       <div className="leading-tight">
@@ -46,16 +51,16 @@ function Navbar() {
         <div className="flex items-center gap-3">
           <div className="hidden text-right md:block">
             <p className="text-sm font-semibold leading-tight text-foreground">
-              Admin
+              {name}
             </p>
 
             <p className="text-xs leading-tight text-muted-foreground">
-              admin@sunic.com
+              {email}
             </p>
           </div>
 
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-amber-500/30 bg-amber-500/10 font-mono text-sm font-bold text-amber-600 dark:text-amber-400">
-            A
+            {name.charAt(0).toUpperCase()}
           </div>
         </div>
       </div>
