@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/dashboard";
+import api from "./api";
 
 export interface DashboardData {
   stats: {
@@ -41,7 +39,6 @@ export interface DashboardData {
 }
 
 export const getDashboard = async (): Promise<DashboardData> => {
-  const { data } = await axios.get(API_URL);
-
+  const { data } = await api.get("/dashboard");
   return data;
 };

@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API = "http://localhost:5000/api/employees";
+import api from "./api";
 
 export interface Employee {
   _id?: string;
@@ -14,12 +12,12 @@ export interface Employee {
 }
 
 export const getEmployees = async () => {
-  const res = await axios.get(API);
+  const res = await api.get("/employees");
   return res.data.employees;
 };
 
 export const addEmployee = async (employee: Employee) => {
-  const res = await axios.post(API, employee);
+  const res = await api.post("/employees", employee);
   return res.data;
 };
 
@@ -27,11 +25,11 @@ export const updateEmployee = async (
   id: string,
   employee: Employee
 ) => {
-  const res = await axios.put(`${API}/${id}`, employee);
+  const res = await api.put(`/employees/${id}`, employee);
   return res.data;
 };
 
 export const deleteEmployee = async (id: string) => {
-  const res = await axios.delete(`${API}/${id}`);
+  const res = await api.delete(`/employees/${id}`);
   return res.data;
 };
