@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Item from "../models/items";
+import { createNotification } from "../services/notification.service";
 
 export const addItem = async (
   req: Request,
@@ -45,6 +46,13 @@ export const addItem = async (
       category,
       quantity,
       availableQuantity: quantity,
+    });
+
+    await createNotification({
+      title: "Item Added",
+      message: `${item.name} (${item.quantity} units) added to inventory.`,
+      type: "success",
+      module: "inventory",
     });
 
     return res.status(201).json({
@@ -138,6 +146,29 @@ export const updateItem = async (
 
     await item.save();
 
+    await createNotification({
+      title: "Item Updated",
+      message: `${item.name} was updated.`,
+      type: "info",
+      module: "inventory",
+    });
+
+    if (item.availableQuantity === 0) {
+      await createNotification({
+        title: "Out of Stock",
+        message: `${item.name} is out of stock.`,
+        type: "error",
+        module: "inventory",
+      });
+    } else if (item.availableQuantity <= 5) {
+      await createNotification({
+        title: "Low Stock",
+        message: `${item.name} has only ${item.availableQuantity} units remaining.`,
+        type: "warning",
+        module: "inventory",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Item updated successfully",
@@ -166,6 +197,13 @@ export const deleteItem = async (
         message: "Item not found",
       });
     }
+
+    await createNotification({
+      title: "Item Deleted",
+      message: `${item.name} was removed from inventory.`,
+      type: "error",
+      module: "inventory",
+    });
 
     await Item.findByIdAndDelete(id);
 

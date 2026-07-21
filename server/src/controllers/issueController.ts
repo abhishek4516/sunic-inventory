@@ -3,6 +3,7 @@ import {
   getAllIssuedItemsService,
   issueItemService,
 } from "../services/issue.service";
+import { createNotification } from "../services/notification.service";
 
 export const issueItem = async (
   req: Request,
@@ -28,6 +29,13 @@ export const issueItem = async (
       employeeName,
       quantity,
       remarks,
+    });
+
+    await createNotification({
+      title: "Item Issued",
+      message: `${quantity} unit(s) issued to ${employeeName}.`,
+      type: "info",
+      module: "issue",
     });
 
     return res.status(201).json({

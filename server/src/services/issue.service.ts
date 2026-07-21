@@ -1,6 +1,8 @@
 import { Types } from "mongoose";
 import Issue from "../models/issue";
 import Item from "../models/items";
+import { createNotification } from "./notification.service";
+
 interface IssueItemData {
   itemId: string;
   employeeName: string;
@@ -36,14 +38,37 @@ export const issueItemService = async ({
 
   await item.save();
 
- const issue = await Issue.create({
-  itemId: new Types.ObjectId(itemId),
-  employeeName,
-  quantity,
-  remarks,
-  issuedBy,
-  status: "Issued",
-});
+  const issue = await Issue.create({
+    itemId: new Types.ObjectId(itemId),
+    employeeName,
+    quantity,
+    remarks,
+    issuedBy,
+    status: "Issued",
+  });
+
+  await createNotification({
+    title: "Item Issued",
+    message: `${quantity} ${item.name}(s) issued to ${employeeName}.`,
+    type: "info",
+    module: "issue",
+  });
+
+  if (item.availableQuantity === 0) {
+    await createNotification({
+      title: "Out of Stock",
+      message: `${item.name} is now out of stock.`,
+      type: "error",
+      module: "inventory",
+    });
+  } else if (item.availableQuantity <= 5) {
+    await createNotification({
+      title: "Low Stock",
+      message: `${item.name} has only ${item.availableQuantity} unit(s) remaining.`,
+      type: "warning",
+      module: "inventory",
+    });
+  }
 
   return issue;
 };

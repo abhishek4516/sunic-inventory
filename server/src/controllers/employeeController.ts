@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Employee from "../models/employee";
+import { createNotification } from "../services/notification.service";
 
 export const addEmployee = async (
   req: Request,
@@ -41,6 +42,13 @@ export const addEmployee = async (
       name,
       department,
       designation,
+    });
+
+    await createNotification({
+      title: "Employee Added",
+      message: `${employee.name} (${employee.employeeId}) joined the ${employee.department} department as ${employee.designation}.`,
+      type: "success",
+      module: "employee",
     });
 
     return res.status(201).json({
