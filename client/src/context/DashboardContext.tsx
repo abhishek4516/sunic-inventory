@@ -57,6 +57,7 @@ export function DashboardProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDashboard() {
   const context = useContext(DashboardContext);
 

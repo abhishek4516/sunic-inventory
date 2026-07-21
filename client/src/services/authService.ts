@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/auth";
+const API = "https://sunic-inventory.onrender.com/api/auth";
 
 export interface RegisterData {
   name: string;
@@ -14,24 +14,12 @@ export interface LoginData {
   password: string;
 }
 
-export const registerUser = async (
-  data: RegisterData
-) => {
-  const res = await axios.post(
-    `${API}/register`,
-    data
-  );
-
+export const registerUser = async (data: RegisterData) => {
+  const res = await axios.post(`${API}/register`, data);
   return res.data;
 };
 
-export const loginUser = async (
-  data: LoginData
-) => {
-  const res = await axios.post(
-    `${API}/login`,
-    data
-  );
-
+export const loginUser = async (data: LoginData) => {
+  const res = await axios.post(`${API}/login`, data);
   return res.data;
 };
