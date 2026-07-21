@@ -44,12 +44,14 @@ export const addEmployee = async (
       designation,
     });
 
-    await createNotification({
-      title: "Employee Added",
-      message: `${employee.name} (${employee.employeeId}) joined the ${employee.department} department as ${employee.designation}.`,
-      type: "success",
-      module: "employee",
-    });
+await createNotification({
+  title: "Employee Added",
+  message: `${employee.name} added successfully.`,
+  type: "success",
+  module: "employee",
+  actionUrl: "/employees",
+  icon: "employee",
+});
 
     return res.status(201).json({
       success: true,

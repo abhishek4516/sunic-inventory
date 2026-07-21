@@ -47,27 +47,32 @@ export const issueItemService = async ({
     status: "Issued",
   });
 
-  await createNotification({
-    title: "Item Issued",
-    message: `${quantity} ${item.name}(s) issued to ${employeeName}.`,
-    type: "info",
-    module: "issue",
-  });
-
+await createNotification({
+  title: "Item Issued",
+  message: `${quantity} ${item.name} issued.`,
+  type: "info",
+  module: "issue",
+  actionUrl: "/issues",
+  icon: "issue",
+});
   if (item.availableQuantity === 0) {
     await createNotification({
-      title: "Out of Stock",
-      message: `${item.name} is now out of stock.`,
-      type: "error",
-      module: "inventory",
-    });
+  title: "Out of Stock",
+  message: `${item.name} is out of stock.`,
+  type: "error",
+  module: "inventory",
+  actionUrl: "/inventory",
+  icon: "warning",
+});
   } else if (item.availableQuantity <= 5) {
     await createNotification({
-      title: "Low Stock",
-      message: `${item.name} has only ${item.availableQuantity} unit(s) remaining.`,
-      type: "warning",
-      module: "inventory",
-    });
+  title: "Low Stock",
+  message: `${item.name} has only ${item.availableQuantity} units remaining.`,
+  type: "warning",
+  module: "inventory",
+  actionUrl: "/inventory",
+  icon: "warning",
+});
   }
 
   return issue;

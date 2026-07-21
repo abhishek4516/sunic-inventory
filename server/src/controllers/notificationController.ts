@@ -14,13 +14,15 @@ export const fetchNotifications = async (
   try {
     const notifications = await getNotifications();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: notifications.length,
       notifications,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to fetch notifications",
     });
@@ -32,7 +34,9 @@ export const readNotification = async (
   res: Response
 ) => {
   try {
-    const notification = await markAsRead(req.params.id);
+    const id = String(req.params.id);
+
+    const notification = await markAsRead(id);
 
     if (!notification) {
       return res.status(404).json({
@@ -41,12 +45,14 @@ export const readNotification = async (
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       notification,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to update notification",
     });
@@ -60,12 +66,14 @@ export const readAllNotifications = async (
   try {
     await markAllAsRead();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "All notifications marked as read",
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to update notifications",
     });
@@ -77,7 +85,9 @@ export const removeNotification = async (
   res: Response
 ) => {
   try {
-    const notification = await deleteNotification(req.params.id);
+    const id = String(req.params.id);
+
+    const notification = await deleteNotification(id);
 
     if (!notification) {
       return res.status(404).json({
@@ -86,12 +96,14 @@ export const removeNotification = async (
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Notification deleted",
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to delete notification",
     });
@@ -105,12 +117,14 @@ export const removeAllNotifications = async (
   try {
     await clearNotifications();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "All notifications cleared",
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to clear notifications",
     });
