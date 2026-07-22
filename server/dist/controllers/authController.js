@@ -3,55 +3,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.logout = exports.me = exports.login = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
-const register = async (req, res) => {
-    try {
-        const { name, email, password, role } = req.body;
-        const existingUser = await user_1.default.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: "User already exists",
-            });
-        }
-        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
-        const user = await user_1.default.create({
-            name,
-            email,
-            password: hashedPassword,
-            role,
-        });
-        const token = (0, generateToken_1.default)(user._id.toString(), user.role);
-        return res.status(201).json({
-            success: true,
-            token,
-            user,
-        });
-    }
-    catch {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error",
-        });
-    }
-};
-exports.register = register;
+// import { AuthRequest } from "../middleware/authenticate";
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await user_1.default.findOne({ email });
+        const user = await user_1.default.findOne({
+            email: email.toLowerCase(),
+        }).select("+password");
         if (!user) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 message: "Invalid email or password",
             });
         }
+        if (!user.isActive) {
+            return res.status(403).json({
+                success: false,
+                message: "Account is inactive. Contact administrator.",
+            });
+        }
         const isMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 message: "Invalid email or password",
             });
@@ -60,10 +37,19 @@ const login = async (req, res) => {
         return res.status(200).json({
             success: true,
             token,
-            user,
+            user: {
+                _id: user._id,
+                name: user.name,
+                employeeId: user.employeeId,
+                email: user.email,
+                phone: user.phone,
+                role: user.role,
+                isActive: user.isActive,
+            },
         });
     }
-    catch {
+    catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -71,4 +57,42 @@ const login = async (req, res) => {
     }
 };
 exports.login = login;
+const me = async (req, res) => {
+    try {
+        const user = await user_1.default.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            user: {
+                _id: user._id,
+                name: user.name,
+                employeeId: user.employeeId,
+                email: user.email,
+                phone: user.phone,
+                role: user.role,
+                isActive: user.isActive,
+            },
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+exports.me = me;
+const logout = async (_req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "Logged out successfully",
+    });
+};
+exports.logout = logout;
 //# sourceMappingURL=authController.js.map

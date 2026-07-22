@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getEmployees = exports.addEmployee = void 0;
 const employee_1 = __importDefault(require("../models/employee"));
+const notification_service_1 = require("../services/notification.service");
 const addEmployee = async (req, res) => {
     try {
         const { employeeId, name, department, designation, } = req.body;
@@ -31,6 +32,14 @@ const addEmployee = async (req, res) => {
             name,
             department,
             designation,
+        });
+        await (0, notification_service_1.createNotification)({
+            title: "Employee Added",
+            message: `${employee.name} added successfully.`,
+            type: "success",
+            module: "employee",
+            actionUrl: "/employees",
+            icon: "employee",
         });
         return res.status(201).json({
             success: true,

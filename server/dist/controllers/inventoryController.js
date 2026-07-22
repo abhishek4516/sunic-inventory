@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteItem = exports.updateItem = exports.getItems = exports.addItem = void 0;
 const items_1 = __importDefault(require("../models/items"));
+const notification_service_1 = require("../services/notification.service");
 const addItem = async (req, res) => {
     try {
         const { name, category, quantity } = req.body;
@@ -41,13 +42,22 @@ const addItem = async (req, res) => {
             quantity,
             availableQuantity: quantity,
         });
+        await (0, notification_service_1.createNotification)({
+            title: "Item Added",
+            message: `${item.name} (${item.quantity} units) added to inventory.`,
+            type: "success",
+            module: "inventory",
+            actionUrl: "/inventory",
+            icon: "inventory",
+        });
         return res.status(201).json({
             success: true,
             message: "Item added successfully",
             item,
         });
     }
-    catch {
+    catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -65,7 +75,8 @@ const getItems = async (req, res) => {
             items,
         });
     }
-    catch {
+    catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -115,13 +126,42 @@ const updateItem = async (req, res) => {
         item.availableQuantity =
             quantity - issuedQuantity;
         await item.save();
+        await (0, notification_service_1.createNotification)({
+            title: "Item Updated",
+            message: `${item.name} was updated.`,
+            type: "info",
+            module: "inventory",
+            actionUrl: "/inventory",
+            icon: "inventory",
+        });
+        if (item.availableQuantity === 0) {
+            await (0, notification_service_1.createNotification)({
+                title: "Out of Stock",
+                message: `${item.name} is out of stock.`,
+                type: "error",
+                module: "inventory",
+                actionUrl: "/inventory",
+                icon: "warning",
+            });
+        }
+        else if (item.availableQuantity <= 5) {
+            await (0, notification_service_1.createNotification)({
+                title: "Low Stock",
+                message: `${item.name} has only ${item.availableQuantity} units remaining.`,
+                type: "warning",
+                module: "inventory",
+                actionUrl: "/inventory",
+                icon: "warning",
+            });
+        }
         return res.status(200).json({
             success: true,
             message: "Item updated successfully",
             item,
         });
     }
-    catch {
+    catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -139,13 +179,22 @@ const deleteItem = async (req, res) => {
                 message: "Item not found",
             });
         }
+        await (0, notification_service_1.createNotification)({
+            title: "Item Deleted",
+            message: `${item.name} was removed from inventory.`,
+            type: "error",
+            module: "inventory",
+            actionUrl: "/inventory",
+            icon: "inventory",
+        });
         await items_1.default.findByIdAndDelete(id);
         return res.status(200).json({
             success: true,
             message: "Item deleted successfully",
         });
     }
-    catch {
+    catch (error) {
+        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",

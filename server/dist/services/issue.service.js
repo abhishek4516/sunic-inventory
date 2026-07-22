@@ -7,6 +7,7 @@ exports.getAllIssuedItemsService = exports.issueItemService = void 0;
 const mongoose_1 = require("mongoose");
 const issue_1 = __importDefault(require("../models/issue"));
 const items_1 = __importDefault(require("../models/items"));
+const notification_service_1 = require("./notification.service");
 const issueItemService = async ({ itemId, employeeName, quantity, remarks, issuedBy = "Admin", }) => {
     const item = await items_1.default.findById(itemId);
     if (!item) {
@@ -28,6 +29,34 @@ const issueItemService = async ({ itemId, employeeName, quantity, remarks, issue
         issuedBy,
         status: "Issued",
     });
+    await (0, notification_service_1.createNotification)({
+        title: "Item Issued",
+        message: `${quantity} ${item.name} issued.`,
+        type: "info",
+        module: "issue",
+        actionUrl: "/issues",
+        icon: "issue",
+    });
+    if (item.availableQuantity === 0) {
+        await (0, notification_service_1.createNotification)({
+            title: "Out of Stock",
+            message: `${item.name} is out of stock.`,
+            type: "error",
+            module: "inventory",
+            actionUrl: "/inventory",
+            icon: "warning",
+        });
+    }
+    else if (item.availableQuantity <= 5) {
+        await (0, notification_service_1.createNotification)({
+            title: "Low Stock",
+            message: `${item.name} has only ${item.availableQuantity} units remaining.`,
+            type: "warning",
+            module: "inventory",
+            actionUrl: "/inventory",
+            icon: "warning",
+        });
+    }
     return issue;
 };
 exports.issueItemService = issueItemService;

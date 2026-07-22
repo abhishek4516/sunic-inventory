@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import generateToken from "../utils/generateToken";
+// import { AuthRequest } from "../middleware/authenticate";
 
 export const login = async (
   req: Request,
@@ -69,7 +70,7 @@ export const login = async (
 };
 
 export const me = async (
-  req: Request,
+req: Request,
   res: Response
 ) => {
   try {
@@ -84,7 +85,15 @@ export const me = async (
 
     return res.status(200).json({
       success: true,
-      user,
+      user: {
+        _id: user._id,
+        name: user.name,
+        employeeId: user.employeeId,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        isActive: user.isActive,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -97,7 +106,7 @@ export const me = async (
 };
 
 export const logout = async (
-  req: Request,
+  _req: Request,
   res: Response
 ) => {
   return res.status(200).json({

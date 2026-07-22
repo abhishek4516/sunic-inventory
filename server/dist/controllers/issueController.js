@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllIssuedItems = exports.issueItem = void 0;
 const issue_service_1 = require("../services/issue.service");
+const notification_service_1 = require("../services/notification.service");
 const issueItem = async (req, res) => {
     try {
         const { itemId, employeeName, quantity, remarks, } = req.body;
@@ -16,6 +17,14 @@ const issueItem = async (req, res) => {
             employeeName,
             quantity,
             remarks,
+        });
+        await (0, notification_service_1.createNotification)({
+            title: "Item Issued",
+            message: `${quantity} unit(s) issued to ${employeeName}.`,
+            type: "info",
+            module: "issue",
+            actionUrl: "/issues",
+            icon: "issue",
         });
         return res.status(201).json({
             success: true,
