@@ -3,36 +3,64 @@ import bcrypt from "bcryptjs";
 import User from "../models/user";
 import generateToken from "../utils/generateToken";
 
-export const register = async (req: Request, res: Response) => {
+export const login = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    }).select("+password");
 
-    if (existingUser) {
-      return res.status(400).json({
+    if (!user) {
+      return res.status(401).json({
         success: false,
-        message: "User already exists",
+        message: "Invalid email or password",
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: "Account is inactive. Contact administrator.",
+      });
+    }
 
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
 
-    const token = generateToken(user._id.toString(), user.role);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
 
-    return res.status(201).json({
+    const token = generateToken(
+      user._id.toString(),
+      user.role
+    );
+
+    return res.status(200).json({
       success: true,
       token,
-      user,
+      user: {
+        _id: user._id,
+        name: user.name,
+        employeeId: user.employeeId,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        isActive: user.isActive,
+      },
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -40,39 +68,40 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const me = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
+    const user = await User.findById(req.user.id);
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
-        message: "Invalid email or password",
+        message: "User not found",
       });
     }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid email or password",
-      });
-    }
-
-    const token = generateToken(user._id.toString(), user.role);
 
     return res.status(200).json({
       success: true,
-      token,
       user,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
   }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response
+) => {
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 };
