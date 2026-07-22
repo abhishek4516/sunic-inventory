@@ -3,7 +3,7 @@ import {
   ChevronLeft,
   FileText,
   LayoutDashboard,
-  LogOut,
+
   PackagePlus,
   Users,
 } from "lucide-react";
@@ -129,7 +129,7 @@ function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-border p-3">
+      {/* <div className="border-t border-border p-3">
         <button
           className={`flex w-full items-center rounded-md px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${
             isCollapsed ? "justify-center" : ""
@@ -146,7 +146,7 @@ function Sidebar() {
             </span>
           )}
         </button>
-      </div>
+      </div> */}
     </aside>
   );
 }
