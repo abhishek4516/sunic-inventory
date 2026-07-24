@@ -14,12 +14,12 @@ const userSchema = new mongoose_1.Schema({
         trim: true,
         uppercase: true,
     },
-    email: {
+    username: {
         type: String,
         required: true,
         unique: true,
-        lowercase: true,
         trim: true,
+        lowercase: true,
         index: true,
     },
     password: {

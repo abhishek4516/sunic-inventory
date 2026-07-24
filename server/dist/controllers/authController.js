@@ -7,17 +7,16 @@ exports.logout = exports.me = exports.login = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
-// import { AuthRequest } from "../middleware/authenticate";
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
         const user = await user_1.default.findOne({
-            email: email.toLowerCase(),
+            username: username.toLowerCase(),
         }).select("+password");
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid email or password",
+                message: "Invalid username or password",
             });
         }
         if (!user.isActive) {
@@ -30,7 +29,7 @@ const login = async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid email or password",
+                message: "Invalid username or password",
             });
         }
         const token = (0, generateToken_1.default)(user._id.toString(), user.role);
@@ -40,8 +39,8 @@ const login = async (req, res) => {
             user: {
                 _id: user._id,
                 name: user.name,
+                username: user.username,
                 employeeId: user.employeeId,
-                email: user.email,
                 phone: user.phone,
                 role: user.role,
                 isActive: user.isActive,
@@ -71,8 +70,8 @@ const me = async (req, res) => {
             user: {
                 _id: user._id,
                 name: user.name,
+                username: user.username,
                 employeeId: user.employeeId,
-                email: user.email,
                 phone: user.phone,
                 role: user.role,
                 isActive: user.isActive,
