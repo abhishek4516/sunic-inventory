@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 
 export interface IUser extends Document {
   name: string;
-  email: string;
+  username: string;
   password: string;
   role: "admin" | "employee";
   employeeId: string;
@@ -26,12 +26,12 @@ const userSchema = new Schema<IUser>(
       uppercase: true,
     },
 
-    email: {
+    username: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
       trim: true,
+      lowercase: true,
       index: true,
     },
 

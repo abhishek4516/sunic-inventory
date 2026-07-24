@@ -2,23 +2,22 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import generateToken from "../utils/generateToken";
-// import { AuthRequest } from "../middleware/authenticate";
 
 export const login = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     const user = await User.findOne({
-      email: email.toLowerCase(),
+      username: username.toLowerCase(),
     }).select("+password");
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid username or password",
       });
     }
 
@@ -37,7 +36,7 @@ export const login = async (
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid username or password",
       });
     }
 
@@ -52,8 +51,8 @@ export const login = async (
       user: {
         _id: user._id,
         name: user.name,
+        username: user.username,
         employeeId: user.employeeId,
-        email: user.email,
         phone: user.phone,
         role: user.role,
         isActive: user.isActive,
@@ -70,7 +69,7 @@ export const login = async (
 };
 
 export const me = async (
-req: Request,
+  req: Request,
   res: Response
 ) => {
   try {
@@ -88,8 +87,8 @@ req: Request,
       user: {
         _id: user._id,
         name: user.name,
+        username: user.username,
         employeeId: user.employeeId,
-        email: user.email,
         phone: user.phone,
         role: user.role,
         isActive: user.isActive,
