@@ -6,12 +6,10 @@ export interface Employee {
   name: string;
   department: string;
   designation: string;
-  email: string;
-  phone: string;
   status: "Active" | "Inactive";
 }
 
-export const getEmployees = async () => {
+export const getEmployees = async (): Promise<Employee[]> => {
   const res = await api.get("/employees");
   return res.data.employees;
 };

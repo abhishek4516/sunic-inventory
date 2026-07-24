@@ -1,15 +1,5 @@
 import EmployeeStatusBadge from "./EmployeeStatusBadge";
-
-export interface Employee {
-  _id: string;
-  employeeId: string;
-  name: string;
-  department: string;
-  designation: string;
-  email: string;
-  phone: string;
-  status: "Active" | "Inactive";
-}
+import type { Employee } from "../services/employeeService";
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -29,8 +19,6 @@ function EmployeeTable({
     "Name",
     "Department",
     "Designation",
-    "Email",
-    "Phone",
     "Status",
     "Actions",
   ];
@@ -74,7 +62,7 @@ function EmployeeTable({
           {!loading && employees.length === 0 && (
             <tr>
               <td
-                colSpan={8}
+                colSpan={6}
                 className="py-16 text-center text-muted-foreground"
               >
                 No employees found.
@@ -104,13 +92,7 @@ function EmployeeTable({
                   {employee.designation}
                 </td>
 
-                <td className="px-4 py-4 text-foreground">
-                  {employee.email}
-                </td>
-
-                <td className="px-4 py-4 text-foreground">
-                  {employee.phone}
-                </td>
+             
 
                 <td className="px-4 py-4">
                   <EmployeeStatusBadge

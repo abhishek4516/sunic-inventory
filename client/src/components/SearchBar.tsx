@@ -1,4 +1,4 @@
-// SearchBar.tsx
+
 import { Search } from "lucide-react";
 
 interface SearchBarProps {
@@ -16,7 +16,7 @@ function SearchBar({ value, onChange }: SearchBarProps) {
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search inventory..."
+       placeholder="Search employees..."
         className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-4 text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </div>
