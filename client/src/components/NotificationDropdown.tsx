@@ -29,85 +29,119 @@ const NotificationDropdown = ({
     actionUrl: string
   ) => {
     await markAsRead(id);
-
     navigate(actionUrl);
-
     onClose();
   };
 
   return (
     <div
       className="
-      absolute right-0 mt-3
-      w-[420px]
-      max-h-[600px]
-      rounded-2xl
-      bg-white
-      dark:bg-slate-900
-      shadow-2xl
-      border
-      border-gray-200
-      dark:border-slate-700
-      overflow-hidden
-      z-50"
+        absolute right-0 mt-3
+        w-105
+        overflow-hidden
+        rounded-2xl
+        border border-border
+        bg-card
+        shadow-xl
+        z-50
+      "
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between px-5 py-4 border-b dark:border-slate-700">
-        <div>
-          <h3 className="font-semibold text-lg">
-            Notifications
-          </h3>
+      <div className="flex items-center justify-between border-b border-border px-6 py-5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-500/10">
+            <Bell className="h-5 w-5 text-amber-600" />
+          </div>
 
-          <p className="text-xs text-gray-500">
-            {notifications.length} total
-          </p>
+          <div>
+            <h3 className="text-base font-semibold text-foreground">
+              Notifications
+            </h3>
+
+            <p className="text-xs text-muted-foreground">
+              {notifications.length} notification
+              {notifications.length !== 1 ? "s" : ""}
+            </p>
+          </div>
         </div>
 
-        <div className="flex gap-2">
-          <button
-            onClick={markAllAsRead}
-            className="
-            flex items-center gap-1
-            text-sm
-            px-3 py-2
+        <button
+          onClick={onClose}
+          className="
             rounded-lg
-            hover:bg-gray-100
-            dark:hover:bg-slate-800"
-          >
-            <CheckCheck className="w-4 h-4" />
-            Read all
-          </button>
+            px-3 py-2
+            text-sm
+            text-muted-foreground
+            transition
+            hover:bg-accent
+            hover:text-foreground
+          "
+        >
+          Close
+        </button>
+      </div>
 
-          <button
-            onClick={clearAll}
-            className="
-            flex items-center gap-1
-            text-sm
-            px-3 py-2
+      {/* Actions */}
+
+      <div className="flex items-center justify-between border-b border-border px-5 py-3">
+        <button
+          onClick={markAllAsRead}
+          className="
+            flex items-center gap-2
             rounded-lg
+            px-3 py-2
+            text-sm
+            font-medium
+            text-muted-foreground
+            transition
+            hover:bg-accent
+            hover:text-foreground
+          "
+        >
+          <CheckCheck size={16} />
+          Mark all read
+        </button>
+
+        <button
+          onClick={clearAll}
+          className="
+            flex items-center gap-2
+            rounded-lg
+            px-3 py-2
+            text-sm
+            font-medium
             text-red-500
+            transition
             hover:bg-red-50
-            dark:hover:bg-red-900/20"
-          >
-            <Trash2 className="w-4 h-4" />
-            Clear
-          </button>
-        </div>
+            dark:hover:bg-red-900/20
+          "
+        >
+          <Trash2 size={16} />
+          Clear all
+        </button>
       </div>
 
       {/* Content */}
 
-      <div className="max-h-[470px] overflow-y-auto">
+      <div className="max-h-115 overflow-y-auto">
         {loading ? (
-          <div className="p-10 text-center text-gray-500">
+          <div className="flex h-44 items-center justify-center text-sm text-muted-foreground">
             Loading notifications...
           </div>
         ) : notifications.length === 0 ? (
-          <div className="py-16 flex flex-col items-center text-gray-500">
-            <Bell className="w-10 h-10 mb-4 opacity-40" />
+          <div className="flex h-56 flex-col items-center justify-center">
+            <div className="rounded-full bg-muted p-5">
+              <Bell className="h-8 w-8 text-muted-foreground" />
+            </div>
 
-            <p>No notifications</p>
+            <h4 className="mt-4 text-base font-medium text-foreground">
+              No notifications
+            </h4>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              You're all caught up.
+            </p>
           </div>
         ) : (
           notifications.map((notification) => (
@@ -123,20 +157,6 @@ const NotificationDropdown = ({
             />
           ))
         )}
-      </div>
-
-      {/* Footer */}
-
-      <div className="border-t dark:border-slate-700 px-5 py-3 text-center">
-        <button
-          onClick={onClose}
-          className="
-          text-sm
-          text-blue-600
-          hover:underline"
-        >
-          Close
-        </button>
       </div>
     </div>
   );

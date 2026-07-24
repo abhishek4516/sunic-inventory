@@ -115,7 +115,7 @@ function Sidebar() {
               {({ isActive }) => (
                 <>
                   <span
-                    className={`absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-amber-500 transition-opacity ${
+                    className={`absolute left-0 top-1/2 h-5 w-0.75 -translate-y-1/2 rounded-r-full bg-amber-500 transition-opacity ${
                       isActive
                         ? "opacity-100"
                         : "opacity-0"

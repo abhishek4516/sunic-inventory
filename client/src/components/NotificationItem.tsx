@@ -33,6 +33,7 @@ const NotificationItem = ({
 
   const timeAgo = () => {
     const seconds = Math.floor(
+      // eslint-disable-next-line react-hooks/purity
       (Date.now() -
         new Date(notification.createdAt).getTime()) /
         1000

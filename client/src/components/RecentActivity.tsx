@@ -5,7 +5,7 @@ function RecentActivity() {
 
   if (loading || !dashboard) {
     return (
-      <div className="h-[350px] animate-pulse rounded-2xl border border-border bg-card" />
+      <div className="h-87.5 animate-pulse rounded-2xl border border-border bg-card" />
     );
   }
 
@@ -22,11 +22,11 @@ function RecentActivity() {
             className="relative flex gap-4 pb-6 last:pb-0"
           >
             {index !== dashboard.recentActivity.length - 1 && (
-              <span className="absolute left-[5px] top-3 h-full w-px bg-border" />
+              <span className="absolute left-1.25 top-3 h-full w-px bg-border" />
             )}
 
             <span
-              className={`relative mt-1.5 h-[11px] w-[11px] shrink-0 rounded-full border-2 ${
+              className={`relative mt-1.5 h-2.75 w-2.75 shrink-0 rounded-full border-2 ${
                 index === 0
                   ? "border-amber-500 bg-amber-500/20"
                   : "border-border bg-card"

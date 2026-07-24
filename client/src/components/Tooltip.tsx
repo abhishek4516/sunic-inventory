@@ -18,7 +18,7 @@ function Tooltip({ content, children }: TooltipProps) {
           <TooltipPrimitive.Content
             side="bottom"
             sideOffset={8}
-            className="z-[9999] rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-lg animate-in fade-in zoom-in-95"
+            className="z-9999 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-lg animate-in fade-in zoom-in-95"
           >
             {content}
 
