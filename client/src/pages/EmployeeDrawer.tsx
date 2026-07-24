@@ -28,6 +28,7 @@ function EmployeeDrawer({
 
   useEffect(() => {
     if (employee) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm(employee);
     } else {
       setForm(emptyEmployee);

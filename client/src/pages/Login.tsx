@@ -107,7 +107,7 @@ function Login() {
             disabled={loading}
             className="w-full rounded-lg bg-amber-500 py-3 font-semibold text-[#241701] transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </div>
       </div>
