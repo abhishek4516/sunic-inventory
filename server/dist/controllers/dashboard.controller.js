@@ -5,11 +5,15 @@ const dashboard_service_1 = require("../services/dashboard.service");
 const dashboard = async (req, res) => {
     try {
         const data = await (0, dashboard_service_1.getDashboardData)();
-        res.status(200).json(data);
+        return res.status(200).json(data);
     }
     catch (error) {
-        res.status(500).json({
+        console.error("Dashboard Error:", error);
+        return res.status(500).json({
             message: "Unable to fetch dashboard",
+            error: process.env.NODE_ENV !== "production"
+                ? error
+                : undefined,
         });
     }
 };

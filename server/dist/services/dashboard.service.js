@@ -19,7 +19,8 @@ const getDashboardData = async () => {
         console.log({
             employee: issue.employeeName,
             quantity: issue.quantity,
-            itemId: issue.itemId,
+            item: issue.itemId?.name ?? "Unknown Item",
+            rawItemId: issue.itemId,
             createdAt: issue.createdAt,
         });
     });
@@ -44,13 +45,19 @@ const getDashboardData = async () => {
         time: new Date(item.createdAt).toLocaleDateString(),
         createdAt: item.createdAt,
     }));
-    const issueActivities = issues.map((issue) => ({
-        id: issue._id.toString(),
-        text: `Issued ${issue.quantity} ${issue.itemId.name} to ${issue.employeeName}`,
-        time: new Date(issue.createdAt).toLocaleDateString(),
-        createdAt: issue.createdAt,
-    }));
-    const recentActivity = [...inventoryActivities, ...issueActivities]
+    const issueActivities = issues.map((issue) => {
+        const itemName = issue.itemId?.name ?? "Unknown Item";
+        return {
+            id: issue._id.toString(),
+            text: `Issued ${issue.quantity} ${itemName} to ${issue.employeeName}`,
+            time: new Date(issue.createdAt).toLocaleDateString(),
+            createdAt: issue.createdAt,
+        };
+    });
+    const recentActivity = [
+        ...inventoryActivities,
+        ...issueActivities,
+    ]
         .sort((a, b) => new Date(b.createdAt).getTime() -
         new Date(a.createdAt).getTime())
         .slice(0, 5)
