@@ -170,73 +170,70 @@ function Inventory() {
           }}
           onDelete={handleDelete}
         />
-                <div className="hidden print:block bg-white p-8 text-black">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold">
-              SUNIC TECHNOLOGIES
-            </h1>
+        <div className="hidden print:block bg-white p-8 text-black">
+  <div className="mb-8 text-center">
+    <h1 className="text-3xl font-bold">
+      SUNIC TECHNOLOGIES
+    </h1>
 
-            <h2 className="mt-2 text-xl font-semibold">
-              Inventory Report
-            </h2>
+    <h2 className="mt-2 text-xl font-semibold">
+      Inventory Report
+    </h2>
 
-            <p className="mt-2 text-sm">
-              Generated on{" "}
-              {new Date().toLocaleString()}
-            </p>
-          </div>
+    <p className="mt-2 text-sm">
+      Generated on {new Date().toLocaleString()}
+    </p>
+  </div>
 
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-black p-2 text-left">
-                  Item Code
-                </th>
+  <table className="w-full border-collapse text-sm">
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="border border-black p-2 text-left">
+          ITEM
+        </th>
 
-                <th className="border border-black p-2 text-left">
-                  Item Name
-                </th>
+        <th className="border border-black p-2 text-left">
+          CATEGORY
+        </th>
 
-                <th className="border border-black p-2 text-left">
-                  Category
-                </th>
+        <th className="border border-black p-2 text-center">
+          QUANTITY
+        </th>
+      </tr>
+    </thead>
 
-               
-              </tr>
-            </thead>
+    <tbody>
+      {filteredItems.map((item) => (
+        <tr key={item._id}>
+          <td className="border border-black p-2">
+            {item.name}
+          </td>
 
-            <tbody>
-              {filteredItems.map((item) => (
-                <tr key={item._id}>
-                 
+          <td className="border border-black p-2">
+            {item.category}
+          </td>
 
-                  <td className="border border-black p-2">
-                    {item.name}
-                  </td>
+          <td className="border border-black p-2 text-center">
+            {item.quantity}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 
-                  <td className="border border-black p-2">
-                    {item.category}
-                  </td>
+  <div className="mt-10 flex justify-between items-end">
+    <p className="text-sm">
+      Total Items: <strong>{filteredItems.length}</strong>
+    </p>
 
-                  <td className="border border-black p-2 text-center">
-                    {item.quantity}
-                  </td>
-
-                  
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="mt-10 flex justify-end">
-            <div className="text-center">
-              <div className="mb-12 border-b border-black w-48"></div>
-              <p className="text-sm font-semibold">
-                Authorized Signature
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="text-center">
+      <div className="mb-12 w-48 border-b border-black"></div>
+      <p className="text-sm font-semibold">
+        Authorized Signature
+      </p>
+    </div>
+  </div>
+</div>
       </div>
     </AdminLayout>
   );
