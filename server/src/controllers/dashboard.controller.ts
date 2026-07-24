@@ -8,10 +8,16 @@ export const dashboard = async (
   try {
     const data = await getDashboardData();
 
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({
+    console.error("Dashboard Error:", error);
+
+    return res.status(500).json({
       message: "Unable to fetch dashboard",
+      error:
+        process.env.NODE_ENV !== "production"
+          ? error
+          : undefined,
     });
   }
 };

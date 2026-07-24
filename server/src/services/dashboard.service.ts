@@ -8,18 +8,21 @@ export const getDashboardData = async () => {
     .populate("itemId", "name")
     .sort({ createdAt: -1 })
     .limit(5);
-console.log("===== DASHBOARD DEBUG =====");
-console.log("Items:", items.length);
-console.log("Issues:", issues.length);
 
-issues.forEach((issue) => {
-  console.log({
-    employee: issue.employeeName,
-    quantity: issue.quantity,
-    itemId: issue.itemId,
-    createdAt: issue.createdAt,
+  console.log("===== DASHBOARD DEBUG =====");
+  console.log("Items:", items.length);
+  console.log("Issues:", issues.length);
+
+  issues.forEach((issue) => {
+    console.log({
+      employee: issue.employeeName,
+      quantity: issue.quantity,
+      item: (issue.itemId as any)?.name ?? "Unknown Item",
+      rawItemId: issue.itemId,
+      createdAt: issue.createdAt,
+    });
   });
-});
+
   const totalItems = items.length;
 
   const totalQuantity = items.reduce(
@@ -67,14 +70,22 @@ issues.forEach((issue) => {
     createdAt: item.createdAt,
   }));
 
-  const issueActivities = issues.map((issue) => ({
-    id: issue._id.toString(),
-    text: `Issued ${issue.quantity} ${(issue.itemId as any).name} to ${issue.employeeName}`,
-    time: new Date(issue.createdAt).toLocaleDateString(),
-    createdAt: issue.createdAt,
-  }));
+  const issueActivities = issues.map((issue) => {
+    const itemName =
+      (issue.itemId as any)?.name ?? "Unknown Item";
 
-  const recentActivity = [...inventoryActivities, ...issueActivities]
+    return {
+      id: issue._id.toString(),
+      text: `Issued ${issue.quantity} ${itemName} to ${issue.employeeName}`,
+      time: new Date(issue.createdAt).toLocaleDateString(),
+      createdAt: issue.createdAt,
+    };
+  });
+
+  const recentActivity = [
+    ...inventoryActivities,
+    ...issueActivities,
+  ]
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() -
