@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IIssue extends Document {
- itemId: Types.ObjectId;
+  itemId: Types.ObjectId;
   employeeName: string;
   quantity: number;
   remarks?: string;
@@ -9,6 +9,9 @@ export interface IIssue extends Document {
   status: "Issued" | "Returned";
   issuedAt: Date;
   returnedAt?: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const issueSchema = new Schema<IIssue>(
