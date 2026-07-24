@@ -201,17 +201,7 @@ function Inventory() {
                   Category
                 </th>
 
-                <th className="border border-black p-2 text-center">
-                  Quantity
-                </th>
-
-                <th className="border border-black p-2 text-center">
-                  Unit
-                </th>
-
-                <th className="border border-black p-2 text-left">
-                  Location
-                </th>
+               
               </tr>
             </thead>
 
