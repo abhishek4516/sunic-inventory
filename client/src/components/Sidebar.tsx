@@ -3,12 +3,12 @@ import {
   ChevronLeft,
   FileText,
   LayoutDashboard,
-
   PackagePlus,
   Users,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
+import Tooltip from "../components/Tooltip";
 
 const menu = [
   {
@@ -49,7 +49,11 @@ function Sidebar() {
     >
       <button
         onClick={toggleSidebar}
-        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-label={
+          isCollapsed
+            ? "Expand sidebar"
+            : "Collapse sidebar"
+        }
         className="absolute -right-3 top-8 flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background text-muted-foreground shadow-sm transition hover:border-amber-500/40 hover:text-amber-500"
       >
         <ChevronLeft
@@ -62,21 +66,23 @@ function Sidebar() {
 
       <div
         className={`flex items-center gap-3 border-b border-border px-5 ${
-          isCollapsed ? "h-20 justify-center px-0" : "h-20"
+          isCollapsed
+            ? "h-20 justify-center px-0"
+            : "h-20"
         }`}
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-amber-500/30 bg-amber-500/10 font-mono text-sm font-bold tracking-tight text-amber-500">
-          S
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10">
+          <img
+            src="/favicon.png"
+            alt="Logo"
+            className="h-8 w-8 rounded-full object-contain"
+          />
         </div>
 
         {!isCollapsed && (
           <div className="leading-tight">
             <div className="text-sm font-bold tracking-[0.2em] text-foreground">
               SUNIC
-            </div>
-
-            <div className="font-mono text-[10px] tracking-[0.15em] text-muted-foreground">
-              INVENTORY OS
             </div>
           </div>
         )}
@@ -101,6 +107,8 @@ function Sidebar() {
                   isActive
                     ? "bg-amber-500/10 text-amber-500"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                } ${
+                  isCollapsed ? "justify-center" : ""
                 }`
               }
             >
@@ -108,19 +116,40 @@ function Sidebar() {
                 <>
                   <span
                     className={`absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-amber-500 transition-opacity ${
-                      isActive ? "opacity-100" : "opacity-0"
+                      isActive
+                        ? "opacity-100"
+                        : "opacity-0"
                     }`}
                   />
 
-                  <Icon
-                    size={18}
-                    strokeWidth={isActive ? 2.25 : 1.75}
-                  />
+                  {isCollapsed ? (
+                    <Tooltip content={item.title}>
+                      <div className="flex items-center justify-center">
+                        <Icon
+                          size={18}
+                          strokeWidth={
+                            isActive
+                              ? 2.25
+                              : 1.75
+                          }
+                        />
+                      </div>
+                    </Tooltip>
+                  ) : (
+                    <>
+                      <Icon
+                        size={18}
+                        strokeWidth={
+                          isActive
+                            ? 2.25
+                            : 1.75
+                        }
+                      />
 
-                  {!isCollapsed && (
-                    <span className="ml-3 font-medium">
-                      {item.title}
-                    </span>
+                      <span className="ml-3 font-medium">
+                        {item.title}
+                      </span>
+                    </>
                   )}
                 </>
               )}
@@ -128,25 +157,6 @@ function Sidebar() {
           );
         })}
       </nav>
-
-      {/* <div className="border-t border-border p-3">
-        <button
-          className={`flex w-full items-center rounded-md px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${
-            isCollapsed ? "justify-center" : ""
-          }`}
-        >
-          <LogOut
-            size={18}
-            strokeWidth={1.75}
-          />
-
-          {!isCollapsed && (
-            <span className="ml-3 font-medium">
-              Logout
-            </span>
-          )}
-        </button>
-      </div> */}
     </aside>
   );
 }

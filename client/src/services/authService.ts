@@ -2,24 +2,23 @@ import axios from "axios";
 
 const API = "https://sunic-inventory.onrender.com/api/auth";
 
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
 export interface LoginData {
-  email: string;
+  username: string;
   password: string;
 }
 
-export const registerUser = async (data: RegisterData) => {
-  const res = await axios.post(`${API}/register`, data);
-  return res.data;
-};
+export interface LoginResponse {
+  token: string;
+  user: {
+    _id: string;
+    username: string;
+    name: string;
+  };
+}
 
-export const loginUser = async (data: LoginData) => {
+export const loginUser = async (
+  data: LoginData
+): Promise<LoginResponse> => {
   const res = await axios.post(`${API}/login`, data);
   return res.data;
 };

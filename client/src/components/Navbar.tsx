@@ -2,7 +2,7 @@ import { LogOut, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import NotificationBell from "./NotificationBell";
-
+import Tooltip from "../components/Tooltip";
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -27,36 +27,40 @@ function Navbar() {
         </h1>
 
         <p className="font-mono text-[10px] tracking-[0.15em] text-muted-foreground">
-          INVENTORY OS
+          INVENTORY MANAGEMENT SYSTEM
         </p>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-          className="rounded-full border border-border bg-background p-2 text-muted-foreground transition-all duration-300 hover:bg-accent hover:text-foreground"
-        >
-          {theme === "dark" ? (
-            <Sun size={18} strokeWidth={1.75} />
-          ) : (
-            <Moon size={18} strokeWidth={1.75} />
-          )}
-        </button>
+        <Tooltip content={theme === "dark" ? "Light Mode" : "Dark Mode"}>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="rounded-full border border-border bg-background p-2 text-muted-foreground transition-all duration-300 hover:bg-accent hover:text-foreground"
+          >
+            {theme === "dark" ? (
+              <Sun size={18} strokeWidth={1.75} />
+            ) : (
+              <Moon size={18} strokeWidth={1.75} />
+            )}
+          </button>
+        </Tooltip>
 
         {/* Notification Bell */}
-        <NotificationBell />
+       
+          <NotificationBell />
+       
 
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          aria-label="Logout"
-          title="Logout"
-          className="rounded-full border border-border bg-background p-2 text-muted-foreground transition-all duration-300 hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
-        >
-          <LogOut size={18} strokeWidth={1.75} />
-        </button>
+        <Tooltip content="Logout">
+          <button
+            onClick={handleLogout}
+            aria-label="Logout"
+            className="rounded-full border border-border bg-background p-2 text-muted-foreground transition-all duration-300 hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
+          >
+            <LogOut size={18} strokeWidth={1.75} />
+          </button>
+        </Tooltip>
 
         <div className="h-8 w-px bg-border" />
 

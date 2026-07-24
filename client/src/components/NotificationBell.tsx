@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
 import NotificationDropdown from "./NotificationDropdown";
 import { useNotifications } from "../hooks/useNotifications";
+import Tooltip from "./Tooltip";
 
-const NotificationBell = () => {
+function NotificationBell() {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -45,41 +46,21 @@ const NotificationBell = () => {
       ref={wrapperRef}
       className="relative"
     >
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="
-          relative
-          p-2
-          rounded-xl
-          transition
-          hover:bg-gray-100
-          dark:hover:bg-slate-800"
-      >
-        <Bell className="w-6 h-6" />
+      <Tooltip content="Notifications">
+  <button
+    onClick={() => setOpen((prev) => !prev)}
+    aria-label="Notifications"
+    className="relative rounded-full border border-border bg-background p-2 text-muted-foreground transition-all duration-300 hover:bg-accent hover:text-foreground"
+  >
+    <Bell size={18} strokeWidth={1.75} />
 
-        {unreadCount > 0 && (
-          <span
-            className="
-              absolute
-              -top-1
-              -right-1
-              min-w-[20px]
-              h-5
-              px-1
-              rounded-full
-              bg-red-500
-              text-white
-              text-[11px]
-              flex
-              items-center
-              justify-center
-              font-semibold
-              animate-pulse"
-          >
-            {unreadCount > 99 ? "99+" : unreadCount}
-          </span>
-        )}
-      </button>
+    {unreadCount > 0 && (
+      <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+        {unreadCount > 99 ? "99+" : unreadCount}
+      </span>
+    )}
+  </button>
+</Tooltip>
 
       <NotificationDropdown
         open={open}
@@ -87,6 +68,6 @@ const NotificationBell = () => {
       />
     </div>
   );
-};
+}
 
 export default NotificationBell;
