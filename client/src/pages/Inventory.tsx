@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Plus } from "lucide-react";
+import { Plus, Printer } from "lucide-react";
 import AdminLayout from "../layouts/AdminLayout";
 import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
@@ -18,7 +18,8 @@ function Inventory() {
   const [category, setCategory] = useState("");
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerMode, setDrawerMode] = useState<"add" | "edit">("add");
+  const [drawerMode, setDrawerMode] =
+    useState<"add" | "edit">("add");
 
   const [selectedItem, setSelectedItem] =
     useState<InventoryItem | null>(null);
@@ -88,6 +89,10 @@ function Inventory() {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -102,16 +107,29 @@ function Inventory() {
             </p>
           </div>
 
-          <button
-            onClick={openAddDrawer}
-            className="flex items-center justify-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600"
-          >
-            <Plus
-              size={16}
-              strokeWidth={2.5}
-            />
-            Add Item
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={handlePrint}
+              className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-accent"
+            >
+              <Printer
+                size={16}
+                strokeWidth={2}
+              />
+              Print
+            </button>
+
+            <button
+              onClick={openAddDrawer}
+              className="flex items-center justify-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600"
+            >
+              <Plus
+                size={16}
+                strokeWidth={2.5}
+              />
+              Add Item
+            </button>
+          </div>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors duration-300">
@@ -152,6 +170,83 @@ function Inventory() {
           }}
           onDelete={handleDelete}
         />
+                <div className="hidden print:block bg-white p-8 text-black">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold">
+              SUNIC TECHNOLOGIES
+            </h1>
+
+            <h2 className="mt-2 text-xl font-semibold">
+              Inventory Report
+            </h2>
+
+            <p className="mt-2 text-sm">
+              Generated on{" "}
+              {new Date().toLocaleString()}
+            </p>
+          </div>
+
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-black p-2 text-left">
+                  Item Code
+                </th>
+
+                <th className="border border-black p-2 text-left">
+                  Item Name
+                </th>
+
+                <th className="border border-black p-2 text-left">
+                  Category
+                </th>
+
+                <th className="border border-black p-2 text-center">
+                  Quantity
+                </th>
+
+                <th className="border border-black p-2 text-center">
+                  Unit
+                </th>
+
+                <th className="border border-black p-2 text-left">
+                  Location
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredItems.map((item) => (
+                <tr key={item._id}>
+                 
+
+                  <td className="border border-black p-2">
+                    {item.name}
+                  </td>
+
+                  <td className="border border-black p-2">
+                    {item.category}
+                  </td>
+
+                  <td className="border border-black p-2 text-center">
+                    {item.quantity}
+                  </td>
+
+                  
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-10 flex justify-end">
+            <div className="text-center">
+              <div className="mb-12 border-b border-black w-48"></div>
+              <p className="text-sm font-semibold">
+                Authorized Signature
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </AdminLayout>
   );
