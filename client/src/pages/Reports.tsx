@@ -499,14 +499,6 @@ setItems(data);
               <tbody>
 
                 {filteredItems.map((item) => {
-
-                  const status =
-                    item.availableQuantity === 0
-                      ? "Out of Stock"
-                      : item.availableQuantity <= 5
-                      ? "Low Stock"
-                      : "In Stock";
-
                   return (
 
                     <tr
@@ -541,7 +533,7 @@ setItems(data);
                       <td className="px-6 py-4 text-center">
 
                         <StatusBadge
-                          status={status}
+                          availableQuantity={item.availableQuantity}
                         />
 
                       </td>
